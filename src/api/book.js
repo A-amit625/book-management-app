@@ -13,12 +13,12 @@ export const addBook = async (book) => {
     return response.data;
 }
 
-export const deleteBook = async (id) => {
-    const response = await axios.delete(`${API_URL}/${id}`)
+export const deleteBook = async (_id) => {
+    const response = await axios.delete(`${API_URL}/${_id}`)
     return response.data;
 }
 
-export const updateBook = async (book, id) => {
-    const response = await axios.put(`${API_URL}/${id}`, book)
+export const updateBook = async (book,_id) => {
+    const response = await axios.put(`${API_URL}/${_id}`, book)
     return response.data;
 }

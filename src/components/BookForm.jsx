@@ -39,7 +39,7 @@ const BookForm = ({ onClose, isOpen, book }) => {
         }
     })
     const updateMutation = useMutation({
-        mutationFn: (data) => updateBook(data, book.id),
+        mutationFn: (data) => updateBook(data, book._id),
         onSuccess: () => {
             queryClient.invalidateQueries(['books'])
             toast.success("Books updated sucessfully")

@@ -18,7 +18,7 @@ const ConfirmationModal = ({ isOpen, onClose, book }) => {
   });
 
   const handleDelete = () => {
-    deleteMutation.mutate(book.id);
+    deleteMutation.mutate(book._id);
   };
 
   if (!isOpen || !book) return null;
