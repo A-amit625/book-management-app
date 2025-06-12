@@ -1,24 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import './index.css';
+import { Toaster } from "react-hot-toast";
+import { fetchBooks } from "./api/book";
+import NotFound from './pages/NotFound';
+import Dashborad from './pages/Dashborad';
 
+const queryClient = new QueryClient();
 function App() {
+  // useEffect(() => {
+  //   const loadBooks = async () => {
+  //     await fetchBooks();
+  //   }
+  //   loadBooks();
+
+  // }, [])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path='*' element={<NotFound />} />
+          <Route path='/' element={<Dashborad />} />
+        </Routes>
+      </BrowserRouter>
+      <Toaster position='top-right' />
+    </QueryClientProvider>
   );
 }
 
