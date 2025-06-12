@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import { useForm } from 'react-hook-form';
 import { addBook, updateBook } from '../api/book';
 import { useQueryClient, useMutation } from '@tanstack/react-query';
@@ -6,22 +6,32 @@ import { toast } from 'react-hot-toast';
 
 const BookForm = ({ onClose, isOpen, book }) => {
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm({
-        defaultValues: book || {
-            title: '',
-            author: '',
-            genre: '',
-            publishedYear: '',
-            status: 'Avaliable',
+    const { register, handleSubmit,setValue, reset, formState: { errors } } = useForm()
+    useEffect(() => {
+        if (book) {
+            setValue('title', book.title);
+            setValue('author', book.author);
+            setValue('genre', book.genre);
+            setValue('publishedYear', book.publishedYear);
+            setValue('status', book.status);
+        } else {
+            reset({
+                title: '',
+                author: '',
+                genre: '',
+                publishedYear: '',
+                status: 'Available'
+            });
         }
-    })
+    }, [book, setValue, reset]);
+
 
     const addMutation = useMutation({
         mutationFn: addBook,
         onSuccess: () => {
-            queryClient.invalidateQueries(['book'])
+            queryClient.invalidateQueries(['books'])
             toast.success("Books added sucessfully")
-            onclose();
+            onClose();
             reset();
         },
         onError: () => {
@@ -31,9 +41,9 @@ const BookForm = ({ onClose, isOpen, book }) => {
     const updateMutation = useMutation({
         mutationFn: (data) => updateBook(data, book.id),
         onSuccess: () => {
-            queryClient.invalidateQueries(['book'])
+            queryClient.invalidateQueries(['books'])
             toast.success("Books updated sucessfully")
-            onclose();
+            onClose();
         },
         onError: () => {
             toast.error("Error while updating book")
@@ -52,7 +62,7 @@ const BookForm = ({ onClose, isOpen, book }) => {
         <div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50'>
             <div className="bg-white rounded-lg p-6 w-full max-w-md">
                 <h2 className="text-xl font-bold mb-4">{book ? "Edit Book" : "Add New Book"}</h2>
-                <form onSubmit={handleSubmit({ onSubmit })}>
+                <form onSubmit={handleSubmit(onSubmit)}>
                     <div className="mb-4">
                         <label className='block text-gray-700 mb-2'>Title</label>
                         <input className="w-full px-3 py-2 border rounded" {...register('title', { required: 'Title is required' })} />
@@ -70,7 +80,8 @@ const BookForm = ({ onClose, isOpen, book }) => {
                     </div>
                     <div className="mb-4">
                         <label className='block text-gray-700 mb-2'>Genre</label>
-                        <select className="w-full px-3 py-2 border rounded">
+                        <select {...register('genre', { required: 'Genre is required' })} className="w-full px-3 py-2 border rounded">
+
                             <option value="">Select Genre</option>
                             <option value="Fiction">Fiction</option>
                             <option value="Non-Fiction">Non-Fiction</option>
@@ -116,7 +127,7 @@ const BookForm = ({ onClose, isOpen, book }) => {
                             onClose()
                             reset();
                         }}>Cancel</button>
-                        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type='submit' disabled={addMutation.isLoading || updateMutation.isLoading}>{addMutation || updateMutation ? "Saving" : "Save"}</button>
+                        <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" type='submit' disabled={addMutation.isLoading || updateMutation.isLoading}>{addMutation.isLoading || updateMutation.isLoading ? "Saving" : "Save"}</button>
                     </div>
                 </form>
             </div>

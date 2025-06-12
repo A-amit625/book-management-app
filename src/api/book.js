@@ -14,11 +14,11 @@ export const addBook = async (book) => {
 }
 
 export const deleteBook = async (id) => {
-    const response = await axios.put(`${API_URL}/${id}`)
+    const response = await axios.delete(`${API_URL}/${id}`)
     return response.data;
 }
 
 export const updateBook = async (book, id) => {
-    const response = await axios.post(`${API_URL}/${id}`, book)
+    const response = await axios.put(`${API_URL}/${id}`, book)
     return response.data;
 }
