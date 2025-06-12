@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:3001/books";
+const API_URL = "https://crudcrud.com/api/7a87f7131a63492b82d8f548fe3739f2/books";
 
 export const fetchBooks = async () => {
     const response = await axios.get(API_URL)
